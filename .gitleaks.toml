@@ -1,0 +1,22 @@
+title = "Shevek Collect source checks"
+
+[extend]
+useDefault = true
+
+# These exact synthetic strings exercise privacy behaviour. Keep exemptions
+# constrained to the rule, fixture file and value; never exempt all tests.
+[[allowlists]]
+description = "Deterministic, non-production HMAC fixture"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)tests/conftest\.py$''']
+regexTarget = "secret"
+regexes = ['''^0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$''']
+
+[[allowlists]]
+description = "Synthetic Authorization header used to test structure filtering"
+condition = "AND"
+targetRules = ["curl-auth-header"]
+paths = ['''(^|/)tests/test_security_hardening\.py$''']
+regexTarget = "secret"
+regexes = ['''^AUDIT_HEADER_SECRET$''']

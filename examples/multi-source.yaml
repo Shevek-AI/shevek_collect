@@ -1,0 +1,71 @@
+# Edit paths and identifiers, then remove providers you do not use.
+# Relative paths resolve from this file's directory.
+version: 1
+
+defaults:
+  since: "2026-01-01"
+
+activity_sources:
+  git:
+    repos:
+      - path: ~/src/example-app
+        topology:
+          comparison_refs:
+            - refs/remotes/origin/develop
+    message_mode: subject
+    include_raw_emails: false
+    include_remote_urls: false
+    include_local_paths: false
+    topology:
+      max_commit_ids: 500
+      include_merge_viability: true
+
+  github:
+    repos:
+      - example-org/example-app
+    body_mode: title
+    comment_mode: metadata
+    actor_mode: hash
+    commit_message_mode: subject
+    include_file_patches: false
+    include_urls: false
+    retry:
+      max_attempts: 5
+      initial_delay_seconds: 1
+      max_delay_seconds: 30
+      max_retry_after_seconds: 300
+
+  azure_devops:
+    organization: example-org
+    repos:
+      - project: Platform
+        repo: example-library
+    token_env: AZURE_DEVOPS_EXT_PAT
+    body_mode: title
+    comment_mode: metadata
+    actor_mode: hash
+    commit_message_mode: subject
+    include_urls: false
+
+repository_snapshots:
+  git:
+    repos:
+      - path: ~/src/example-app
+        snapshots:
+          - name: target
+            ref: HEAD
+    capture:
+      # full exports source blobs; structure exports filtered observations only.
+      content_mode: structure
+      max_file_bytes: 2097152
+      max_total_bytes: 268435456
+      include_globs: []
+      exclude_globs:
+        - data/**
+        - '**/data/**'
+      use_default_excludes: true
+
+# Only needed with the optional Shevek service's `submit` command:
+# submission:
+#   project_id: "your-project-id"
+#   priorities: priorities.md

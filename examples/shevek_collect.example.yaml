@@ -1,0 +1,16 @@
+# Copy to shevek_collect.yaml and edit the repository path.
+# Run: uv run shevek-collect run --config shevek_collect.yaml --out runs/activity
+version: 1
+
+activity_sources:
+  git:
+    repos:
+      - ~/src/example-app
+    since: "90 days ago"
+    message_mode: subject
+    include_raw_emails: false
+    include_remote_urls: false
+    include_local_paths: false
+
+# This example collects activity only. For source snapshots or provider activity,
+# see examples/multi-source.yaml and docs/configuration.md.
